@@ -1,10 +1,10 @@
 #!/bin/bash
 # Date : (2017-03-21)
-# Last revision : 
+# Last revision :
 # Distribution used to test : Linux Mint
 # Author : George Sokianos
 # Licence : GPLv3
-# WineHQ: 
+# WineHQ:
 
 # Changelog
 
@@ -18,7 +18,7 @@ TITLE="FlowerPot Setup"
 PREFIX="FlowerPot"
 SHORTCUT_NAME="Flower Pot"
 
-POL_GetSetupImages "http://psytrance.g-sonique.com/flowerpot/playonlinux/top.jpg" "http://psytrance.g-sonique.com/flowerpot/playonlinux/left.jpg" "$TITLE"
+POL_GetSetupImages "http://file.amiga.sk/flowerpot/playonlinux/top.jpg" "http://file.amiga.sk/flowerpot/playonlinux/left.jpg" "$TITLE"
 
 POL_SetupWindow_Init
 POL_RequiredVersion "4.2.10" || POL_Debug_Fatal "$APPLICATION_TITLE 4.2.10 is required to install $TITLE"
