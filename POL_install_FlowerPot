@@ -59,7 +59,7 @@ POL_Wine_WaitExit "$TITLE"
 Set_OS winxp
 
 POL_Shortcut "FlowerPot.exe" "$SHORTCUT_NAME"
-POL_Shortcut "winuae.exe" "WinUAE"
+POL_Shortcut "winuae.exe" "$SHORTCUT_NAME WinUAE"
 
 POL_SetupWindow_message "$(eval_gettext 'Complete setup:\n
 Open the folder\n
