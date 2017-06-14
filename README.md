@@ -14,11 +14,12 @@ Prerequisites
 -------------
 * You need to have installed at your system the [PlayOnLinux v4.2.10](https://www.playonlinux.com/en/download.html)
 * wine 2.0-staging is also needed
+* [AmigaOS 4.1 FE for Classic Amiga](https://www.amikit.amiga.sk/os4) 
 
 Credits
 -------
-Flower Pot © 2017 by Ján Zahurančík [www.amikit.amiga.sk](http://www.amikit.amiga.sk)
-Quick Launcher by Rex Schilasky
-Skin by Kenneth E. Lester, Jr. [www.five-star.com](http://www.five-star.com)
-WinUAE emulator engine by Toni Wilen [www.winuae.net](http://www.winuae.net)
+* Flower Pot © 2017 by Ján Zahurančík [www.amikit.amiga.sk](http://www.amikit.amiga.sk)
+* Quick Launcher by Rex Schilasky
+* Skin by Kenneth E. Lester, Jr. [www.five-star.com](http://www.five-star.com)
+* WinUAE emulator engine by Toni Wilen [www.winuae.net](http://www.winuae.net)
 
