@@ -1,29 +1,76 @@
 #!/bin/bash
-# Date : (2017-03-21)
+# Date : (2019-02-24)
 # Last revision :
-# Distribution used to test : Linux Mint
+# Distribution used to test : Linux Manjaro
 # Author : George Sokianos
-# Licence : GPLv3
-# WineHQ:
-
-# Changelog
-
 
 [ "$PLAYONLINUX" = "" ] && exit 0
 source "$PLAYONLINUX/lib/sources"
 
-WINEVERSION="2.0-staging"
 
-TITLE="FlowerPot Setup"
+VER=1.1
+SCRIPTNAME="POL_install_FlowerPot"
+WINEVERSION="3.21-staging"
+
+TITLE="Flower Pot Setup"
 PREFIX="FlowerPot"
 SHORTCUT_NAME="Flower Pot"
 
 POL_GetSetupImages "http://file.amiga.sk/flowerpot/playonlinux/top.jpg" "http://file.amiga.sk/flowerpot/playonlinux/left.jpg" "$TITLE"
 
 POL_SetupWindow_Init
+
 POL_RequiredVersion "4.2.10" || POL_Debug_Fatal "$APPLICATION_TITLE 4.2.10 is required to install $TITLE"
 
-POL_SetupWindow_presentation "Flower Pot" "Amikit" "http://www.amikit.amiga.sk" "Jan Zahurancik and George Sokianos" "$PREFIX"
+# Intro information
+POL_SetupWindow_free_presentation "${TITLE} - Plant Your OS4" "$(eval_gettext 'Flower Pot is a package that allows easy installation\n
+and emulation of AmigaOS4.1 Final Edition for Classic\n
+on Windows, Mac and Linux computers.\n\n
+AmigaOS 4, abbreviated as OS4, is the latest line of\n
+Amiga operating systems which runs on PowerPC\n
+microprocessors.')"
+
+# Software Requirements information
+POL_SetupWindow_free_presentation "Software Requirements" "$(eval_gettext '* AmigaOS 4.1 Final Edition for Classic\n
+   (available at bit.ly/AmigaOS4)\n
+* Amiga 4000 ROM file\n
+* Cyberstorm PPC ROM files\n
+   (both ROMs are included with Amiga Forever available\n
+   at bit.ly/buyamigaforever)')"
+
+# Credits information
+POL_SetupWindow_free_presentation "Credits" "$(eval_gettext '* Flower Pot by Jan Zahurancik amikit.amiga.sk\n
+* Quick Launcher by Rex Schilasky\n
+* Skin by Kenneth E. Lester, Jr. five*star.com\n
+* WinUAE emulator engine by Toni Wilen winuae.net\n
+* Smart Files System by Jorg Strohmayer\n
+* Sound Blaster 128 AHI driver by Ross Vumbaca\n
+* Amiga OS and its logos are registered trademarks\n
+   of Hyperion Entertainment\n
+* Amiga Forever is registered trademark of\n
+   Cloanto Corporation\n
+* PlayOnLinux install script by George Sokianos')"
+
+# Check the latest version of the script
+wget https://raw.githubusercontent.com/walkero-gr/flowerpot_POL_script/master/.ver -O /tmp/.ver
+LVER=$(</tmp/.ver)
+
+if (( $(echo "$LVER > $VER" | bc -l) )); then
+    POL_SetupWindow_question "$(eval_gettext 'A new version of the script found. You wanna update it?\nIf you select "Yes", the new script will be downloaded automatically. The current script will be renamed. Then you will have to restart the installation from the PlayOnLinux window.\n\n
+    Current version: $VER\n
+    New Version: $LVER')" "New version found"
+
+    if [ "$APP_ANSWER" = "TRUE" ]; then
+        SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+        mv "${SCRIPTPATH}/${SCRIPTNAME}" "${SCRIPTPATH}/${SCRIPTNAME}_${VER}"
+        wget https://raw.githubusercontent.com/walkero-gr/flowerpot_POL_script/master/POL_install_FlowerPot -O "${SCRIPTPATH}/${SCRIPTNAME}"
+
+        POL_SetupWindow_message "$(eval_gettext 'The new version of the script downloaded.\nClick "Next" to close this window and restart the installation from the start from the PlayOnLinux window.')" "Update completed"
+
+        POL_SetupWindow_Close
+        exit
+    fi
+fi
 
 POL_SetupWindow_InstallMethod "LOCAL"
 
@@ -41,28 +88,26 @@ POL_Call POL_Install_d3dx9_43
 POL_Call POL_Install_d3dx10
 POL_Call POL_Install_d3dx11
 
-"cd $HOME || exit"    # Switch to user's personal directory
-# Download latest winetricks and install vcrun2015
-wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
-chmod +x winetricks
-WINEPREFIX="$HOME"/.PlayOnLinux/wineprefix/"$PREFIX" "$HOME"/winetricks -q vcrun2015
-rm "$HOME"/winetricks
+POL_Call POL_Install_LunaTheme
+POL_Call POL_Function_FontsSmoothRGB
 
-Set_OS "win7"
+# Installation of VCRun 2017
+wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /tmp/winetricks
+chmod +x /tmp/winetricks
+WINEPREFIX="$HOME"/.PlayOnLinux/wineprefix/"$PREFIX" /tmp/winetricks -q vcrun2017
 
-POL_SetupWindow_message "$(eval_gettext 'Warning: You must not tick the checkboxes "Read Gardeners Guide" and "Launch Flower Pot" when setup is done')" "$TITLE"
+Set_OS "win7" "sp2"
+
+POL_SetupWindow_message "$(eval_gettext 'Warning: You must not tick the checkboxes "Read Gardeners Guide" and "Launch Flower Pot" when setup is done')" "Please read"
 
 POL_Wine_WaitBefore "$TITLE"
 GC_DONT_GC=1 POL_AutoWine "$FULL_INSTALLER"
 POL_Wine_WaitExit "$TITLE"
 
-Set_OS winxp
-
 POL_Shortcut "FlowerPot.exe" "$SHORTCUT_NAME"
 POL_Shortcut "winuae.exe" "$SHORTCUT_NAME WinUAE"
 
-POL_SetupWindow_message "$(eval_gettext 'Complete setup:\n
-Open the folder\n
+POL_SetupWindow_message "$(eval_gettext 'Open the folder\n
 "$HOME/.PlayOnLinux/wineprefix/$PREFIX/drive_c/Program Files/FlowerPot/ROMs/"\n
 and copy the following files\n\n
 amiga-os-310-a4000.rom\n
@@ -71,7 +116,8 @@ ClassicInstallCD-53.71.iso\n
 rom.key (optional)\n\n
 Make sure the filenames are exactly the same.\n
 Now start the Flower Pot application and click the Install OS4 button!\n\n
-Click Next to close this window.')" "$TITLE"
+Click Next to close this window.')" "Setup Completed"
 
+ 
 POL_SetupWindow_Close
-exit 0
+exit
